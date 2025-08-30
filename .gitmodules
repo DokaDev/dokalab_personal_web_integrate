@@ -1,0 +1,6 @@
+[submodule "dokalab_s3_service"]
+	path = dokalab_s3_service
+	url = https://github.com/DokaDev/dokalab_s3_service.git
+[submodule "dokalab_blog_server"]
+	path = dokalab_blog_server
+	url = https://github.com/DokaDev/dokalab_blog_server

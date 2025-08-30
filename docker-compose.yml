@@ -1,0 +1,51 @@
+services:
+  dokalab_blog_db:
+    image: postgres:17-alpine
+    container_name: dokalab_blog_db_postgres
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: dokalab_blog_db
+    ports:
+      - "5436:5432"
+    volumes:
+      - dokalab_blog_db:/var/lib/postgresql/data
+    networks:
+      - dokalab_blog_network
+  
+  dokalab_s3_db:
+    image: postgres:17-alpine
+    container_name: dokalab_s3_db_postgres
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: dokalab_s3_db
+    ports:
+      - "5440:5432"
+    volumes:
+      - dokalab_s3_db:/var/lib/postgresql/data
+    networks:
+      - dokalab_blog_network
+
+  dokalab_s3_minio_storage:
+    image: minio/minio
+    container_name: dokalab_s3_minio_storage
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    ports:
+      - "9000:9000"
+    volumes:
+      - dokalab_s3_minio_storage:/data
+    networks:
+      - dokalab_blog_network
+
+volumes:
+  dokalab_blog_db:
+    driver: local
+  dokalab_s3_db:
+    driver: local
+
+networks:
+  dokalab_blog_network:
+    external: true

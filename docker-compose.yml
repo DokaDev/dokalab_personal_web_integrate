@@ -35,10 +35,10 @@ services:
     environment:
       MINIO_ROOT_USER: ${MINIO_ROOT_USER}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
-      MINIO_NOTIFY_KAFKA_ENABLE_MINIO: "on"
-      MINIO_NOTIFY_KAFKA_BROKERS_MINIO: "kafka:9092"
-      MINIO_NOTIFY_KAFKA_TOPIC_MINIO: "minio-events"
-      MINIO_NOTIFY_KAFKA_VERSION_MINIO: "0.10.2"
+      # MINIO_NOTIFY_KAFKA_ENABLE_MINIO: "on"
+      # MINIO_NOTIFY_KAFKA_BROKERS_MINIO: "kafka:9092"
+      # MINIO_NOTIFY_KAFKA_TOPIC_MINIO: "minio-events"
+      # MINIO_NOTIFY_KAFKA_VERSION_MINIO: "0.10.2"
     ports:
       - "9000:9000"
       - "9001:9001"
@@ -48,33 +48,47 @@ services:
     restart: unless-stopped
     networks:
       - dokalab_personal_web_network
-  
-  zookeeper:
-    image: confluentinc/cp-zookeeper:7.5.0
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-    ports:
-      - "2181:2181"
-    networks:
-      - dokalab_personal_web_network
-    restart: unless-stopped
 
-  kafka:
-    image: confluentinc/cp-kafka:7.5.0
-    environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-    ports:
-      - "29092:29092"
-    depends_on:
-      - zookeeper
-    networks:
-      - dokalab_personal_web_network
-    restart: unless-stopped
+  # dokalab_minio_init:
+  #   image: minio/mc
+  #   depends_on:
+  #     - dokalab_s3_minio_storage
+  #   entrypoint: >
+  #     /bin/sh -c "
+  #       sleep 15;
+  #       mc alias set local http://dokalab_s3_minio_storage:9000 ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD};
+  #       mc mb local/test-bucket || true;
+  #       mc event add local/test-bucket arn:minio:sqs::MINIO:kafka --event put;
+  #     "
+  #   networks:
+  #     - dokalab_personal_web_network
+  
+  # zookeeper:
+  #   image: confluentinc/cp-zookeeper:7.5.0
+  #   environment:
+  #     ZOOKEEPER_CLIENT_PORT: 2181
+  #   ports:
+  #     - "2181:2181"
+  #   networks:
+  #     - dokalab_personal_web_network
+  #   restart: unless-stopped
+
+  # kafka:
+  #   image: confluentinc/cp-kafka:7.5.0
+  #   environment:
+  #     KAFKA_BROKER_ID: 1
+  #     KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+  #     KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+  #     KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+  #     KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+  #     KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+  #   ports:
+  #     - "29092:29092"
+  #   depends_on:
+  #     - zookeeper
+  #   networks:
+  #     - dokalab_personal_web_network
+  #   restart: unless-stopped
 
 volumes:
   dokalab_blog_db:

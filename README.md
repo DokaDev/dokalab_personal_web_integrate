@@ -4,3 +4,8 @@
 docker network create dokalab_blog_network
 docker compose up -d
 ```
+
+> sync submodules
+```bash
+git submodule update --remote
+```

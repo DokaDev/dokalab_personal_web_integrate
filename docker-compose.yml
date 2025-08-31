@@ -12,7 +12,8 @@ services:
       - dokalab_blog_db:/var/lib/postgresql/data
     networks:
       - dokalab_blog_network
-  
+    restart: unless-stopped
+
   dokalab_s3_db:
     image: postgres:17-alpine
     container_name: dokalab_s3_db_postgres
@@ -26,17 +27,21 @@ services:
       - dokalab_s3_db:/var/lib/postgresql/data
     networks:
       - dokalab_blog_network
+    restart: unless-stopped
 
   dokalab_s3_minio_storage:
-    image: minio/minio
+    image: quay.io/minio/minio
     container_name: dokalab_s3_minio_storage
     environment:
       MINIO_ROOT_USER: ${MINIO_ROOT_USER}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
     ports:
       - "9000:9000"
+      - "9001:9001"
     volumes:
       - dokalab_s3_minio_storage:/data
+    command: server /data --console-address ":9001"
+    restart: unless-stopped
     networks:
       - dokalab_blog_network
 
@@ -44,6 +49,8 @@ volumes:
   dokalab_blog_db:
     driver: local
   dokalab_s3_db:
+    driver: local
+  dokalab_s3_minio_storage:
     driver: local
 
 networks:

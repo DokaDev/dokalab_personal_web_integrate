@@ -7,7 +7,7 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: dokalab_blog_db
     ports:
-      - "5436:5432"
+      - "5441:5432"
     volumes:
       - dokalab_blog_db:/var/lib/postgresql/data
     networks:
@@ -51,7 +51,7 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
     ports:
       - "29092:29092"
     depends_on:

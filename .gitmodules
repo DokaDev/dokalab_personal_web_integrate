@@ -4,3 +4,6 @@
 [submodule "dokalab_blog_server"]
 	path = dokalab_blog_server
 	url = https://github.com/DokaDev/dokalab_blog_server
+[submodule "dokalab_web_auth_service"]
+	path = dokalab_web_auth_service
+	url = https://github.com/DokaDev/dokalab_web_auth_service

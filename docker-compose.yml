@@ -9,6 +9,22 @@ services:
     volumes:
       - dokalab-web-redis-data:/data
     restart: unless-stopped
+
+  dokalab_auth_db:
+    image: postgres:17-alpine
+    container_name: dokalab_auth_db_postgres
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: dokalab_auth_db
+    ports:
+      - "5442:5432"
+    volumes:
+      - dokalab_auth_db:/var/lib/postgresql/data
+    networks:
+      - dokalab_personal_web_network
+    restart: unless-stopped
+
   dokalab_blog_db:
     image: postgres:17-alpine
     container_name: dokalab_blog_db_postgres
@@ -136,6 +152,8 @@ services:
     restart: "no"
 
 volumes:
+  dokalab_auth_db:
+    driver: local
   dokalab_blog_db:
     driver: local
   dokalab_s3_db:

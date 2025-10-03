@@ -18,7 +18,7 @@ services:
       - node.name=elasticsearch-1
       - discovery.type=single-node
       - ES_JAVA_OPTS=-Xms2g -Xmx2g
-      - xpack.security.enabled=true
+      - xpack.security.enabled=false
       - xpack.security.http.ssl.enabled=false
       - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
       - http.port=9200
